@@ -20,13 +20,15 @@ from sklearn import metrics
 from sklearn.metrics.cluster import adjusted_rand_score as ari
 from sklearn.metrics.cluster import normalized_mutual_info_score as nmi
 
-def filte(data, args_name):
+def filte(data_name, args_name):
+    input_path = data_name +".csv"
+    X = pd.read_csv(input_path, header=None)
     file_path = args_name +".csv"
-    a = data.shape[1]
-    exist = (data > 0) * 1.0
-    factor = np.ones(data.shape[1])
+    a = X.shape[1]
+    exist = (X > 0) * 1.0
+    factor = np.ones(X.shape[1])
     res = ((np.dot(exist, factor))/a)*100  
-    test = np.column_stack((res,data))
+    test = np.column_stack((res,X))
     with open(file_path, 'w', newline='') as fout:
         reader = test
         writer = csv.writer(fout, delimiter=',')
@@ -44,13 +46,19 @@ def get_random_block_from_data(data, batch_size):
     start_index = np.random.randint(0, len(data) - batch_size)
     return data[start_index:(start_index + batch_size)]
 
-def autorunner(filter_data, epochs, h1, h2, args_name):
-
-    batch_size = filter_data.shape[0]-1
-    num = filter_data.shape[1]
+def autorunner(data_name, epochs, h1, h2, args_name):
+    
+    tf.reset_default_graph()
+    input_path = data_name +".csv"
+    X = pd.read_csv(input_path, header=None)
+    X = X.drop(0, axis=1)
+    X = np.array(X)
+    X = X.transpose()
+    batch_size = X.shape[0]-1
+    num = X.shape[1]
     file_path = args_name +".csv"
     
-    n_samples,_ = np.shape(filter_data)
+    n_samples,_ = np.shape(X)
 
     training_epochs = epochs
     display_step = 1
@@ -68,16 +76,16 @@ def autorunner(filter_data, epochs, h1, h2, args_name):
         avg_cost = 0
         total_batch = int(n_samples / batch_size)
         for i in range(total_batch):
-            batch_xs = get_random_block_from_data(filter_data, batch_size)
+            batch_xs = get_random_block_from_data(X, batch_size)
             cost = autoencoder.partial_fit(batch_xs)
             avg_cost += cost / n_samples * batch_size
         if epoch % display_step == 0:
             print("Epoch:", '%d,' % (epoch + 1),
                   "Cost:", "{:.9f}".format(avg_cost))    
 
-    print("Total cost: " + str(autoencoder.calc_total_cost(filter_data)))
-    X_test_transform=autoencoder.transform(filter_data)
-    X_test_reconstruct=autoencoder.reconstruct(filter_data)
+    print("Total cost: " + str(autoencoder.calc_total_cost(X)))
+    X_test_transform=autoencoder.transform(X)
+    X_test_reconstruct=autoencoder.reconstruct(X)
     
     
     with open(file_path, 'w', newline='') as fout:
@@ -87,18 +95,27 @@ def autorunner(filter_data, epochs, h1, h2, args_name):
             
     return X_test_reconstruct
 
-def clust(data, label, pca_com, phate_com):
+def clust(data_path, label_path, pca_com, phate_com):
+    input_path = data_path +".csv"
+    label_path = label_path +".csv"
+    X = pd.read_csv(input_path, header=None)
+    X = X.drop(0)
+    X = np.array(X)
+    X = X.transpose()
+
     pca = PCA(n_components=pca_com)
-    b = pca.fit_transform(data)
+    b = pca.fit_transform(X)
     phate_op = phate.PHATE(n_components=phate_com)
     data_phate = phate_op.fit_transform(b)
-    
+    label = pd.read_csv(label_path)
+    y=np.array(label)
+    label = y.ravel() 
     c = label.max()
     centList,clusterAssment = biKmeans(data_phate,c)
     julei = clusterAssment[:,0]
     y=np.array(julei)
     julei = y.ravel()
-    
+
     print('NMI value is %f \n' % nmi(julei.flatten(),label.flatten()))
     print('ARI value is %f \n' % ari(julei.flatten(),label.flatten()))
     print('HOM value is %f \n' % metrics.homogeneity_score(julei,label))
