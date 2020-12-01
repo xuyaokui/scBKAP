@@ -42,6 +42,7 @@ X_con = autorunner('ting_fitler', 1000, 800, 200, 'ting_auto')
 
 ```
 library(M3drop)
+b <- read.csv('ting_auto.csv',header = F)
 Normalized_data <- M3DropCleanData(b, 
                                    is.counts=TRUE, 
                                    min_detected_genes=112)
