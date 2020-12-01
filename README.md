@@ -1,2 +1,65 @@
-# scBKAP
-scBKAP: a single-cell RNA-Seq data clustering pipeline 
+# scBKAP: a single-cell RNA-Seq data clustering pipeline
+
+## Overview
+
+scBKAP, the cornerstone of which is a single-cell bisecting K-means clustering method based on an autoencoder network and a dimensionality reduction model MPDR. Specially, scBKAP utilizes an autoencoder network to reconstruct gene expression values from scRNA-Seq data to alleviate the dropout issue, and the MPDR model composed of the M3Drop feature selection algorithm and the PHATE dimensionality reduction algorithm to reduce the dimensions of reconstructed data. The dimension-ality-reduced data are then fed into the bisecting K-means clustering algorithm to identify the clusters of cells.
+
+## Requirement:
+
+- `python = 3.6`
+- `numpy = 1.16.3`
+- `scipy = 1.4.1`
+- `pandas = 0.25.3`
+- `scikit-learn = 0.22.1`
+- `tensorflow = 1.13.1`
+- `matplotlib = 3.0.3`
+- `R = 3.6`
+
+## Dataset:
+
+We only provide one single-cell RNA-seq dataset Ting, other datasets can be obtained from https://hemberg-lab.github.io/scRNA.seq.datasets/
+
+## Usage:
+
+# Input
+The input of scBKAP should be a csv file (row: genes, col: cells).
+
+# Run
+
+1. Run the `genefilter.py` to filter the data:
+
+```
+filte(data, 'data_filter')
+```
+
+2. Reconstruct the data:
+
+```
+X_con = autorunner(data_filter, 1000, 800, 200, 'data_auto')
+```
+
+3. Use the M3drop:
+
+```
+library(M3drop)
+Normalized_data <- M3DropCleanData(b, 
+                                   is.counts=TRUE, 
+                                   min_detected_genes=112)
+#the min_detected_genes in each dataset is different,because of different expression values
+c <- Normalized_data$data
+c <- t(c)
+write.csv(c,'data_m3.csv',row.names = F, col.names = F)
+```
+
+4. clust the data:
+
+```
+y_pred = clust(data_m3, label, 20, 5)
+```
+
+# Output
+
+- `data_filter.csv` The filtered data.
+- `data_auto.csv` The reconstructed data.
+- `data_m3.csv` The data selected by M3drop.
+- `y_pred` The predicted label by scBKAP.
