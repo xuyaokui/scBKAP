@@ -37,7 +37,7 @@ filte('ting', 'ting_filter')
 2. Reconstruct the data:
 
 ```
-X_con = autorunner('ting_fitler', 1000, 800, 200, 'ting_auto')
+X_con = autorunner('ting_filter', 1000, 800, 200, 'ting_auto')
 ```
 
 3. Use the M3drop:
