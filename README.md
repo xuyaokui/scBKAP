@@ -26,7 +26,7 @@ The input of scBKAP should be a csv file (row: genes, col: cells).
 
 ### Run
 
-1. Run the `genefilter.py` to filter the data:
+1. Run the `genefilter.py` to filter the data， the `data` is the scRNA-seq data matrix:
 
 ```
 filte(data, 'data_filter')
