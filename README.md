@@ -21,10 +21,10 @@ We only provide one single-cell RNA-seq dataset Ting, other datasets can be obta
 
 ## Usage:
 
-# Input
+### Input
 The input of scBKAP should be a csv file (row: genes, col: cells).
 
-# Run
+### Run
 
 1. Run the `genefilter.py` to filter the data:
 
@@ -57,7 +57,7 @@ write.csv(c,'data_m3.csv',row.names = F, col.names = F)
 y_pred = clust(data_m3, label, 20, 5)
 ```
 
-# Output
+### Output
 
 - `data_filter.csv` The filtered data.
 - `data_auto.csv` The reconstructed data.
