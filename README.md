@@ -29,13 +29,13 @@ The input of scBKAP should be a csv file (row: genes, col: cells).
 1. Run the `genefilter.py` to filter the data， the `data` is the scRNA-seq data matrix:
 
 ```
-filte(data, 'data_filter')
+filte('ting', 'ting_filter')
 ```
 
 2. Reconstruct the data:
 
 ```
-X_con = autorunner(data_filter, 1000, 800, 200, 'data_auto')
+X_con = autorunner('ting_fitler', 1000, 800, 200, 'ting_auto')
 ```
 
 3. Use the M3drop:
@@ -54,12 +54,12 @@ write.csv(c,'data_m3.csv',row.names = F, col.names = F)
 4. clust the data:
 
 ```
-y_pred = clust(data_m3, label, 20, 5)
+y_pred = clust('ting_m3', 'ting_label', 20, 5)
 ```
 
 ### Output
 
-- `data_filter.csv` The filtered data.
-- `data_auto.csv` The reconstructed data.
-- `data_m3.csv` The data selected by M3drop.
+- `ting_filter.csv` The filtered data.
+- `ting_auto.csv` The reconstructed data.
+- `ting_m3.csv` The data selected by M3drop.
 - `y_pred` The predicted label by scBKAP.
