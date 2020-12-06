@@ -13,6 +13,7 @@ scBKAP, the cornerstone of which is a single-cell bisecting K-means clustering m
 - `scikit-learn = 0.22.1`
 - `tensorflow = 1.13.1`
 - `matplotlib = 3.0.3`
+- `graphtools = 1.5.2`
 - `R = 3.6`
 
 ## Dataset:
