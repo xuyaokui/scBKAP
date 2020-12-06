@@ -38,6 +38,10 @@ filte('ting', 'ting_filter')
 
 ```
 X_con = autorunner('ting_filter', 1000, 800, 200, 'ting_auto')
+
+# autorunner(data_name, epochs, h1, h2, args_name)
+# epochs is Number of iterations， default value 1000
+# h1 and h2 are the hidden layers， default value 800, 200
 ```
 
 3. Use the M3drop:
@@ -48,7 +52,7 @@ b <- read.csv('ting_auto.csv',header = F)
 Normalized_data <- M3DropCleanData(b, 
                                    is.counts=TRUE, 
                                    min_detected_genes=112)
-#the min_detected_genes in each dataset is different,because of different expression values
+#the min_detected_genes will changes with the different dataset and the different reconstructed data, because of different expression values
 c <- Normalized_data$data
 c <- t(c)
 write.csv(c,'data_m3.csv',row.names = F, col.names = F)
@@ -58,6 +62,10 @@ write.csv(c,'data_m3.csv',row.names = F, col.names = F)
 
 ```
 y_pred = clust('ting_m3', 'ting_label', 20, 5)
+
+# clust(data_path, label_path, pca_com, phate_com)
+# If the number of cells is more than 800, the `pca_com` is 100, otherwise is 20
+# Default value of phate_com is 5
 ```
 
 ### Output
